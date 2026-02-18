@@ -1,0 +1,13 @@
+
+{
+  "name": "mi-primer-app-ts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
+  "dependencies": {
+    "@types/node": "^20.10.4"
+  }
+}
