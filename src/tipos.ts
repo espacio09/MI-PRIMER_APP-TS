@@ -1,0 +1,135 @@
+//tipos.ts
+/* Contiene definiciones de tipos, interfaces, enums, alias…
+No hace “acciones”. Solo describe cómo son las cosas.
+Ejemplo:
+
+Cómo es una Mascota
+Tipos auxiliares: Especie, Vacuna, Duenio
+Funciones simples para crear objetos base */
+
+
+
+//PRIMITIVOS BÁSICOS /*
+
+export const nombreMascota: string = "Minnie Mouse";
+export const edadMascota: number = 3;
+export const vacunada: boolean = true;
+export const razaMascota: string = "Zwergspitz";
+export const personalidadMascota: string = "Juguetona";
+export const duenioNombre: string = "Tatjana";
+export const duenioEdad: number = 58;
+export const tieneSeguro: boolean = true;
+
+//ARREGLOS(Arrays) /*
+export const razasPerro: string[] = ["Labrador", "Beagle", "Border Collie", "Zwergspitz"];
+export const pesosKg: Array<number> = [12.5, 8.2, 20.0, 4.0];
+
+//Tuplas /*
+export const fichaTupla: [string, number, "perro" | "gato"] = ["Luna", 3, "perro"];
+
+//Objetos con type e interface /*
+export type Especie = "perro" | "gato" | "ave";
+export type Sexo = "macho" | "hembra";
+
+export type Mascota = {
+  id: string;
+  nombre: string;
+  especie: Especie;
+  edad: number;
+  sexo?: Sexo;          // opcional
+  vacunada: boolean;
+};
+
+
+export interface Duenio {
+  id: string;
+  nombre: string;
+  telefono?: string;    // opcional
+}
+
+//Union types (uniones) /*
+export type Id = string | number;
+
+export function formatearId(id: Id): string {
+  return typeof id === "number" ? `ID-${id}` : id.toUpperCase();
+}
+
+//Literal types /*
+
+export type EstadoCita = "programada" | "completada" | "cancelada";
+
+export function puedeReprogramarse(e: EstadoCita): boolean {
+  return e === "programada" || e === "cancelada";
+}
+
+//Enum (cuando necesitas un conjunto nombrado)/*
+
+export enum EspecieEnum {
+  Perro = "perro",
+  Gato = "gato",
+  Ave = "ave",
+}
+
+//any, unknown, never /*
+
+export function lanzar(errorMsg: string): never {
+  throw new Error(errorMsg);
+}
+
+export function parsearJSONSeguro(payload: string): unknown {
+  try {
+    return JSON.parse(payload);
+  } catch {
+    return null; // aquí ya no es unknown, es null
+  }
+}
+
+//Type narrowing (refinar tipos en runtime) /*
+type Externo = { proveedor: "google"; token: string } | { proveedor: "azure"; clave: string };
+
+export function credResumen(c: Externo): string {
+  if ("token" in c) return `Google(${c.token.slice(0, 3)}...)`;
+  return `Azure(${c.clave.slice(0, 3)}...)`;
+}
+
+//Genéricos (intro) /*
+
+export interface Paginado<T> {
+  total: number;
+  pagina: number;
+  tamanio: number;
+  items: T[];
+}
+
+export function primero<T>(lista: T[]): T | undefined {
+  return lista[0];
+}
+
+
+//Type assertions (con cuidado)/*
+const el = document.getElementById("app") as HTMLDivElement | null;
+// Mejor: comprueba primero antes de usar
+
+
+// Opcionales y valores por defecto/*
+
+export function crearMascotaBase(
+  nombre: string,
+  especie: Especie,
+  edad = 0,
+  vacunada = false
+): Mascota {
+  return { id: crypto.randomUUID(), nombre, especie, edad, vacunada };
+}
+
+// null / undefined/*
+export function telefonoDuenio(d: Duenio): string {
+  return d.telefono ?? "Sin teléfono";
+}
+
+
+
+
+
+
+
