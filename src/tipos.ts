@@ -7,6 +7,28 @@ Cómo es una Mascota
 Tipos auxiliares: Especie, Vacuna, Duenio
 Funciones simples para crear objetos base */
 
+//Excurso: tipos en TypeScript (primitivos, objetos, uniones, genéricos, etc.)
+
+
+export type TipoMascota = "perro" | "gato" | "hamster" | "loro";
+
+export type Mascota = {
+  id: number;
+  nombre: string;
+  tipo: TipoMascota;
+  edad: number;
+  sexo?: Sexo;          // opcional
+  vacunada: boolean;
+};
+
+
+export interface Cuidado {
+  mascotaId: number;
+  descripcion: string;
+  fecha: Date;
+}
+
+
 
 
 //PRIMITIVOS BÁSICOS /*
@@ -20,6 +42,8 @@ export const duenioNombre: string = "Tatjana";
 export const duenioEdad: number = 58;
 export const tieneSeguro: boolean = true;
 
+
+
 //ARREGLOS(Arrays) /*
 export const razasPerro: string[] = ["Labrador", "Beagle", "Border Collie", "Zwergspitz"];
 export const pesosKg: Array<number> = [12.5, 8.2, 20.0, 4.0];
@@ -31,14 +55,7 @@ export const fichaTupla: [string, number, "perro" | "gato"] = ["Luna", 3, "perro
 export type Especie = "perro" | "gato" | "ave";
 export type Sexo = "macho" | "hembra";
 
-export type Mascota = {
-  id: string;
-  nombre: string;
-  especie: Especie;
-  edad: number;
-  sexo?: Sexo;          // opcional
-  vacunada: boolean;
-};
+
 
 
 export interface Duenio {
