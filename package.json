@@ -1,8 +1,7 @@
-
 {
   "name": "mi-primer-app-ts",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js"

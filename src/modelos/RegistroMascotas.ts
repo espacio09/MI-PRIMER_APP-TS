@@ -6,14 +6,16 @@ Registrar una mascota
 Crear relaciones entre dueño y mascota
 Funciones más “inteligentes”*/
 
+import * as fs from "fs";   // ← AQUÍ
 
-import { Mascota, Cuidado, Duenio, crearMascotaBase, TipoMascota } from '../tipos.js';
+import { Mascota, Cuidado, TipoMascota } from '../tipos.js';
 const TIPOS_VALIDOS: TipoMascota[] = ["perro", "gato", "hamster", "loro"];
 
 export class RegistroMascotas {
   private mascotas: Mascota[] = [];
   private cuidados: Cuidado[] = [];
   private contadorId: number = 1;
+
 
   // Agrega una nueva mascota con validaciones al registro
 
@@ -33,6 +35,7 @@ export class RegistroMascotas {
       throw new Error("La edad no puede ser negativa.");
     }
 
+    // Si todo es válido, crea la nueva mascota y la agrega al registro
     const nueva: Mascota = {
       id: this.contadorId++,
       nombre,
@@ -44,10 +47,6 @@ export class RegistroMascotas {
     this.mascotas.push(nueva);
     return nueva;
   }
-
-
-
-  //Registrar un cuidado para una mascota específica
 
  
 // Registrar cuidado con validaciones
@@ -83,12 +82,4 @@ export class RegistroMascotas {
   obtenerCuidadosDe(mascotaId: number) {
     return this.cuidados.filter(c => c.mascotaId === mascotaId);
   }
-}
-
-//___________________________________________________________-
-
-
-export function registrarMascotaInicial(duenio: Duenio, nombre: string, especie: Especie) {
-  const m = crearMascotaBase(nombre, especie);
-  return { duenio, mascota: m };
 }
