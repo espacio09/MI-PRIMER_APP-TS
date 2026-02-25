@@ -1,4 +1,5 @@
-import { Mascota } from "./models/Mascota.js";
+import { RegistroMascota } from "./modelos";
+import { Mascota } from "./modelos/Mascota";
 
 
 const minnie = new Mascota("Minnie Mouse", 7, "Zwergspitz", true, "juguetona");
@@ -11,7 +12,7 @@ console.log(minnie);
 // nuevo codigo para registrar mascotas y cuidados
 
 
-import { RegistroMascotas } from "./modelos.js";
+import { RegistroMascotas } from "./modelos/RegistroMascotas.js";
 
 const registro = new RegistroMascotas();
 

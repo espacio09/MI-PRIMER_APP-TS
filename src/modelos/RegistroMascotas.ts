@@ -7,7 +7,7 @@ Crear relaciones entre dueño y mascota
 Funciones más “inteligentes”*/
 
 
-import { Mascota, Cuidado, Duenio, crearMascotaBase, TipoMascota } from './tipos.js';
+import { Mascota, Cuidado, Duenio, crearMascotaBase, TipoMascota } from '../tipos.js';
 const TIPOS_VALIDOS: TipoMascota[] = ["perro", "gato", "hamster", "loro"];
 
 export class RegistroMascotas {
