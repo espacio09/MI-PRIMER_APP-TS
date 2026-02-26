@@ -1,0 +1,12 @@
+[
+    {
+        "nombre": "Minnie Mouse",
+        "especie": "perra",
+        "edad": 3,
+        "sexo": "hembra",
+        "dueno": "Tatjana",
+        "vacunas": [
+            "Tollwut"
+        ]
+    }
+]
