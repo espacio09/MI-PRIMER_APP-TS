@@ -1,8 +1,6 @@
 import json
 import os
-import msvcrt
-from simple_term_menu import TerminalMenu
-
+from InquirerPy import inquirer
 
 # =====================
 # 🎨 COLORES ANSI
@@ -16,125 +14,56 @@ MAGENTA = "\033[35m"
 BLUE = "\033[34m"
 RED = "\033[31m"
 
-
 ARCHIVO = "datos.json"
 
-
-## sistema para limpiar la pantalla (funciona en Windows y Unix)
 # =====================
 # 🔄 LIMPIAR PANTALLA
 # =====================
 def limpiar_pantalla():
     print("\033c", end="")
 
-
 # =====================
-# 🎮 MENÚ INTERACTIVO   
-# ===================== 
-
-
-def menu_interactivo(opciones):
-    indice = 0
-
-    while True:
-        limpiar_pantalla()
-        print(BOLD + CYAN + "===== GESTOR DE MASCOTAS =====" + RESET)
-        print("Usa ↑ ↓ y ENTER para seleccionar:\n")
-
-        for i, opcion in enumerate(opciones):
-            if i == indice:
-                print(GREEN + f"> {opcion}" + RESET)
-            else:
-                print(f"  {opcion}")
-
-        # Esperar tecla
-        tecla = msvcrt.getch()
-
-        # Flechas: empiezan con 224
-        if tecla == b'\xe0':
-            flecha = msvcrt.getch()
-
-            # Flecha arriba
-            if flecha == b'H':
-                indice = (indice - 1) % len(opciones)
-
-            # Flecha abajo
-            elif flecha == b'P':
-                indice = (indice + 1) % len(opciones)
-
-        # ENTER
-        elif tecla == b'\r':
-            return indice
-
-
-
-# ------------------------------
-# Cargar datos al iniciar
-# ------------------------------
-def main():
-    mascotas = cargar_datos()
-
-    opciones = [
-        "Registrar nueva mascota", 
-        "Listar mascotas", 
-        "Salir"
-        ]
-    
-    while True:
-        indice = menu_interactivo(opciones)
-        if indice == 0:
-            registrar_mascota(mascotas)
-        elif indice == 1:
-            listar_mascotas(mascotas)
-        elif indice == 2:
-            print("Saliendo del programa...")
-            break
-
-
+# 📁 CARGAR DATOS
+# =====================
 def cargar_datos():
     if os.path.exists(ARCHIVO):
         with open(ARCHIVO, "r", encoding="utf-8") as f:
             return json.load(f)
     return []
 
-
-# ------------------------------
-# Guardar datos en JSON
-# ------------------------------
+# =====================
+# 💾 GUARDAR DATOS
+# =====================
 def guardar_datos(mascotas):
     with open(ARCHIVO, "w", encoding="utf-8") as f:
         json.dump(mascotas, f, ensure_ascii=False, indent=4)
 
+# =====================
+# ✂️ UTIL: Cortar texto largo
+# =====================
+def cortar(texto, max_len):
+    return texto[:max_len-3] + "..." if len(texto) > max_len else texto
 
-# ------------------------------
-# Función auxiliar para cortar texto
-# ------------------------------
-def cortar(texto, longitud):
-    """Trunca un texto a una longitud máxima"""
-    texto_str = str(texto)
-    if len(texto_str) > longitud:
-        return texto_str[:longitud - 3] + "..."
-    return texto_str
-
-
-# ------------------------------
-# Registrar una nueva mascota
-# ------------------------------
+# =====================
+# 🐶 REGISTRAR MASCOTA
+# =====================
 def registrar_mascota(mascotas):
-    
     limpiar_pantalla()
     print(BOLD + CYAN + "\n--- Registrar nueva mascota ---\n" + RESET)
 
-    print("\n--- Registrar nueva mascota ---")
-    nombre = input("Nombre: ")
-    especie = input("Especie (perro, gato…): ")
-    edad = int(input("Edad: "))
-    sexo = input("Sexo (macho / hembra): ")
-    dueno = input("Nombre del dueño: ")
+    nombre = inquirer.text(message="Nombre:").execute()
+    especie = inquirer.text(message="Especie:").execute()
+    edad = int(inquirer.text(message="Edad:").execute())
+    sexo = inquirer.select(message="Sexo:", choices=["macho", "hembra"]).execute()
+    dueno = inquirer.text(message="Dueño:").execute()
 
-    print("Introduce las vacunas separadas por coma (ej: rabia, parvo):")
-    vacunas_input = input("Vacunas: ")
-    vacunas = [v.strip() for v in vacunas_input.split(",")] if vacunas_input else []
+    vacunas = inquirer.checkbox(
+        message="Selecciona vacunas:",
+        choices=["Rabia", "Parvo", "Moquillo", "Leptospirosis", "Ninguna"]
+    ).execute()
+
+    if "Ninguna" in vacunas:
+        vacunas = []
 
     mascota = {
         "nombre": nombre,
@@ -148,46 +77,38 @@ def registrar_mascota(mascotas):
     mascotas.append(mascota)
     guardar_datos(mascotas)
 
-    
     print(GREEN + "\nMascota registrada correctamente.\n" + RESET)
     input("Presiona ENTER para volver al menú...")
 
-
-# ------------------------------
-# Listar mascotas
-# ------------------------------
-
-
+# =====================
+# 📊 LISTAR MASCOTAS
+# =====================
 def listar_mascotas(mascotas):
     limpiar_pantalla()
 
     if not mascotas:
-        
         print(RED + "\n🚫 No hay mascotas registradas.\n" + RESET)
         input("Presiona ENTER para volver...")
         return
-    
-    total: int = len(mascotas)
 
-    print(BOLD + MAGENTA + "🐾 LISTA DE MASCOTAS 🐾\n" + RESET)
+    total = len(mascotas)
+
+    print(BOLD + MAGENTA + f"🐾 LISTA DE MASCOTAS — Total: {total}\n" + RESET)
     print("=" * 90)
 
-
- # ------    Cabecera de tabla
     print(
         f"{BOLD}{'N°':3} {'NOMBRE':15}{'ESPECIE':15}{'EDAD':5}"
         f"{'SEXO':10}{'DUEÑO':15}{'VACUNAS':15}{RESET}"
     )
     print("-" * 90)
 
-# ------    Filas
     for i, m in enumerate(mascotas, 1):
         vacunas = ", ".join(m["vacunas"]) if m["vacunas"] else "Ninguna"
         nombre = cortar(m["nombre"], 15)
         especie = cortar(m["especie"], 15)
         dueno = cortar(m["dueno"], 15)
         vacc = cortar(vacunas, 15)
-        
+
         print(
             f"{i:<3} {nombre:15}{especie:15}{str(m['edad']):5}"
             f"{m['sexo']:10}{dueno:15}{vacc:15}"
@@ -196,39 +117,45 @@ def listar_mascotas(mascotas):
     print("=" * 90 + "\n")
     input("Presiona ENTER para volver al menú...")
 
+# =====================
+# 🎯 MENÚ PRINCIPAL (INQUIRERPY)
+# =====================
+def menu_interactivo():
+    opcion = inquirer.select(
+        message="GESTOR DE MASCOTAS 🐾",
+        choices=[
+            "🐶 Registrar nueva mascota",
+            "📋 Listar mascotas",
+            "❌ Salir"
+        ],
+    ).execute()
 
+    return opcion
 
-
-# ------------------------------
-# Menú interactivo
-# ------------------------------
-def mostrar_menu():
-    print("===== GESTOR DE MASCOTAS =====")
-    print("1. Registrar nueva mascota")
-    print("2. Listar mascotas")
-    print("3. Salir")
-    return input("Elige una opción: ")
-
-
-# ------------------------------
-# Programa principal
-# ------------------------------
+# =====================
+# ▶️ PROGRAMA PRINCIPAL
+# =====================
 def main():
     mascotas = cargar_datos()
 
     while True:
-        opcion = mostrar_menu()
-        if opcion == "1":
-            registrar_mascota(mascotas)
-        elif opcion == "2":
-            listar_mascotas(mascotas)
-        elif opcion == "3":
-            print("Saliendo del programa...")
-            break
-        else:
-            print("Opción no válida. Intenta de nuevo.")
+        limpiar_pantalla()
+        seleccion = menu_interactivo()
 
-# -------------   Punto de entrada del programa
+        if seleccion == "🐶 Registrar nueva mascota":
+            registrar_mascota(mascotas)
+
+        elif seleccion == "📋 Listar mascotas":
+            listar_mascotas(mascotas)
+
+        elif seleccion == "❌ Salir":
+            print("\nSaliendo del programa...")
+            break
+
+# =====================
+# 🔌 ARRANQUE DEL PROGRAMA
+# =====================
 if __name__ == "__main__":
     main()
 
+    
