@@ -1,8 +1,31 @@
-
 import json
 import os
 
+
+# =====================
+# 🎨 COLORES ANSI
+# =====================
+RESET = "\033[0m"
+BOLD = "\033[1m"
+CYAN = "\033[36m"
+YELLOW = "\033[33m"
+GREEN = "\033[32m"
+MAGENTA = "\033[35m"
+BLUE = "\033[34m"
+RED = "\033[31m"
+
+
 ARCHIVO = "datos.json"
+
+
+## sistema para limpiar la pantalla (funciona en Windows y Unix)
+# =====================
+# 🔄 LIMPIAR PANTALLA
+# =====================
+def limpiar_pantalla():
+    print("\033c", end="")
+
+
 
 
 # ------------------------------
@@ -55,17 +78,33 @@ def registrar_mascota(mascotas):
 # ------------------------------
 # Listar mascotas
 # ------------------------------
+
+
 def listar_mascotas(mascotas):
+    limpiar_pantalla()
+
     if not mascotas:
-        print("\nNo hay mascotas registradas.\n")
+        print("\n🚫 No hay mascotas registradas.\n")
         return
 
-    print("\n--- Lista de mascotas ---")
+    print("\n🐾  LISTA DE MASCOTAS  🐾")
+    print("=" * 40)
+
+   
     for i, m in enumerate(mascotas, 1):
-        print(f"{i}. {m['nombre']} ({m['especie']}) - {m['edad']} años - {m['sexo']}")
-        print(f"   Dueño: {m['dueno']}")
-        print(f"   Vacunas: {', '.join(m['vacunas']) if m['vacunas'] else 'Ninguna'}")
-    print()
+        print(f"\nMascota #{i}")
+        print("-" * 40)
+        print(f"Nombre : {m['nombre']}")
+        print(f"Especie: {m['especie']}")
+        print(f"Edad   : {m['edad']} años")
+        print(f"Sexo   : {m['sexo']}")
+        print(f"Dueño  : {m['dueno']}")
+        print(f"Vacunas: {', '.join(m['vacunas']) if m['vacunas'] else 'Ninguna'}")
+
+    print("\n" + "=" * 40 + "\n")
+
+    input("Presiona ENTER para volver al menú...")
+
 
 
 # ------------------------------
