@@ -1,0 +1,1 @@
+// ← punto de entrada (main loop)

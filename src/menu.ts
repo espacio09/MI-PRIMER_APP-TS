@@ -1,0 +1,1 @@
+//  ← pinta el menú y recoge la opción

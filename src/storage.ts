@@ -1,0 +1,1 @@
+// ← lectura/escritura JSON
