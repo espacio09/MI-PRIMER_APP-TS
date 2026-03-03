@@ -7,8 +7,13 @@ import { cargarDatos, guardarDatos } from "./storage.js";
 import { Mascota } from "./modelos/RegistroMascotas.js";
 
 function question(query: string): Promise<string> {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  return new Promise(resolve => rl.question(query, answer => { rl.close(); resolve(answer); }));
+  const rl = readline.createInterface({ 
+    input: process.stdin, 
+    output: process.stdout });
+  return new Promise(resolve => 
+    rl.question(query, answer => { 
+        rl.close(); 
+        resolve(answer); }));
 }
 
 function normalizaTexto(s?: string | null): string {
@@ -16,7 +21,10 @@ function normalizaTexto(s?: string | null): string {
 }
 
 function generarId(): string {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  return (
+    Math.random().toString(36).slice(2) + 
+    Date.now().toString(36)
+  );
 }
 
 export async function registrarMascota(mascotas: Mascota[]): Promise<void> {

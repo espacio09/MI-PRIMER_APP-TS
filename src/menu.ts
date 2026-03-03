@@ -23,8 +23,13 @@ export async function menuInteractivo(): Promise<string> {
   console.log("0) ❌ Salir");
   console.log("---------------------------------------");
 
-  const ans = (await question("Elige una opción (0-2): ")).normalize("NFC").trim();
+  const ans = (await question("Elige una opción (0-2): "))
+  .normalize("NFC")
+  .trim();
 
-  const mapa: Record<string, string> = { "1": OPC_REGISTRAR, "2": OPC_LISTAR, "0": OPC_SALIR };
+  const mapa: Record<string, string> = { 
+    "1": OPC_REGISTRAR, 
+    "2": OPC_LISTAR, 
+    "0": OPC_SALIR };
   return mapa[ans] ?? "";
 }

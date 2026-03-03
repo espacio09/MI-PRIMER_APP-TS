@@ -7,7 +7,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Mascota } from "./modelos/RegistroMascotas.js";
 
-// __dirname equivalente en ESM
+// Compatibilidad ESM para obtener __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -22,10 +22,15 @@ function asegurarDirectorio(): void {
 
 export function cargarDatos(): Mascota[] {
   asegurarDirectorio();
-  if (!existsSync(DATA_FILE)) return [];
+
+  if (!existsSync(DATA_FILE)) {
+    return [];
+  }
+
   try {
     const raw = readFileSync(DATA_FILE, "utf8");
     if (!raw.trim()) return [];
+
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -34,3 +39,8 @@ export function cargarDatos(): Mascota[] {
 }
 
 export function guardarDatos(mascotas: Mascota[]): void {
+  asegurarDirectorio();
+
+  const json = JSON.stringify(mascotas, null, 2);
+  writeFileSync(DATA_FILE, json, "utf8");
+}
