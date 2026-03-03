@@ -1,161 +1,115 @@
+
+# mascotas.py
+
+# Carga/guarda datos en datos/mascotas.json.
+# Registrar una mascota (pide datos por consola).
+# Listar mascotas (tabla simple).
+
+from pathlib import Path
+from datetime import datetime
 import json
-import os
-from InquirerPy import inquirer
+import uuid
 
-# =====================
-# 🎨 COLORES ANSI
-# =====================
-RESET = "\033[0m"
-BOLD = "\033[1m"
-CYAN = "\033[36m"
-YELLOW = "\033[33m"
-GREEN = "\033[32m"
-MAGENTA = "\033[35m"
-BLUE = "\033[34m"
-RED = "\033[31m"
+from utilidades import normaliza_texto, pausar
 
-ARCHIVO = "datos.json"
+DATA_DIR = Path("datos")
+DATA_FILE = DATA_DIR / "mascotas.json"
 
-# =====================
-# 🔄 LIMPIAR PANTALLA
-# =====================
-def limpiar_pantalla():
-    print("\033c", end="")
+# -----------------------------
+# Persistencia de datos
+# -----------------------------
+def _asegurar_directorio():
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# =====================
-# 📁 CARGAR DATOS
-# =====================
-def cargar_datos():
-    if os.path.exists(ARCHIVO):
-        with open(ARCHIVO, "r", encoding="utf-8") as f:
-            return json.load(f)
+def cargar_datos() -> list[dict]:
+    """Devuelve la lista de mascotas desde JSON. Si no existe, devuelve []."""
+    _asegurar_directorio()
+    if DATA_FILE.exists():
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+        except json.JSONDecodeError:
+            # Archivo corrupto o vacío → reiniciar
+            pass
     return []
 
-# =====================
-# 💾 GUARDAR DATOS
-# =====================
-def guardar_datos(mascotas):
-    with open(ARCHIVO, "w", encoding="utf-8") as f:
-        json.dump(mascotas, f, ensure_ascii=False, indent=4)
+def guardar_datos(mascotas: list[dict]) -> None:
+    """Guarda la lista de mascotas en JSON."""
+    _asegurar_directorio()
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(mascotas, f, ensure_ascii=False, indent=2)
 
-# =====================
-# ✂️ UTIL: Cortar texto largo
-# =====================
-def cortar(texto, max_len):
-    return texto[:max_len-3] + "..." if len(texto) > max_len else texto
+# -----------------------------
+# Operaciones
+# -----------------------------
+def registrar_mascota(mascotas: list[dict]) -> None:
+    """Pide datos por consola, añade la mascota y guarda."""
+    print("\n--- Registrar nueva mascota ---")
+    nombre = normaliza_texto(input("Nombre: "))
+    especie = normaliza_texto(input("Especie (perro, gato, etc.): "))
+    duenio = normaliza_texto(input("Nombre del dueño/a: "))
 
-# =====================
-# 🐶 REGISTRAR MASCOTA
-# =====================
-def registrar_mascota(mascotas):
-    limpiar_pantalla()
-    print(BOLD + CYAN + "\n--- Registrar nueva mascota ---\n" + RESET)
+    # Edad como entero (con validación básica)
+    while True:
+        edad_str = normaliza_texto(input("Edad (en años, número): "))
+        if edad_str.isdigit():
+            edad = int(edad_str)
+            break
+        print("⚠ Introduce un número entero válido para la edad.")
 
-    nombre = inquirer.text(message="Nombre:").execute()
-    especie = inquirer.text(message="Especie:").execute()
-    edad = int(inquirer.text(message="Edad:").execute())
-    sexo = inquirer.select(message="Sexo:", choices=["macho", "hembra"]).execute()
-    dueno = inquirer.text(message="Dueño:").execute()
-
-    vacunas = inquirer.checkbox(
-        message="Selecciona vacunas:",
-        choices=["Rabia", "Parvo", "Moquillo", "Leptospirosis", "Ninguna"]
-    ).execute()
-
-    if "Ninguna" in vacunas:
-        vacunas = []
-
-    mascota = {
+    registro = {
+        "id": str(uuid.uuid4()),
         "nombre": nombre,
         "especie": especie,
         "edad": edad,
-        "sexo": sexo,
-        "dueno": dueno,
-        "vacunas": vacunas
+        "duenio": duenio,
+        "fecha_registro": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
-    mascotas.append(mascota)
+    mascotas.append(registro)
     guardar_datos(mascotas)
+    print("\n✅ Mascota registrada correctamente.")
+    pausar()
 
-    print(GREEN + "\nMascota registrada correctamente.\n" + RESET)
-    input("Presiona ENTER para volver al menú...")
-
-# =====================
-# 📊 LISTAR MASCOTAS
-# =====================
-def listar_mascotas(mascotas):
-    limpiar_pantalla()
-
+def listar_mascotas(mascotas: list[dict]) -> None:
+    """Muestra un listado en forma de tabla simple."""
+    print("\n--- Listado de mascotas ---")
     if not mascotas:
-        print(RED + "\n🚫 No hay mascotas registradas.\n" + RESET)
-        input("Presiona ENTER para volver...")
+        print("No hay mascotas registradas todavía.")
+        pausar()
         return
 
-    total = len(mascotas)
+    # Calcular anchos para columnas (estético)
+    cols = ["#", "Nombre", "Especie", "Edad", "Dueño/a", "Registro"]
+    filas = []
+    for i, m in enumerate(mascotas, start=1):
+        filas.append([
+            str(i),
+            m.get("nombre", ""),
+            m.get("especie", ""),
+            str(m.get("edad", "")),
+            m.get("duenio", ""),
+            m.get("fecha_registro", ""),
+        ])
 
-    print(BOLD + MAGENTA + f"🐾 LISTA DE MASCOTAS — Total: {total}\n" + RESET)
-    print("=" * 90)
+    # Ancho por columna
+    anchos = [len(c) for c in cols]
+    for fila in filas:
+        for idx, celda in enumerate(fila):
+            anchos[idx] = max(anchos[idx], len(celda))
 
-    print(
-        f"{BOLD}{'N°':3} {'NOMBRE':15}{'ESPECIE':15}{'EDAD':5}"
-        f"{'SEXO':10}{'DUEÑO':15}{'VACUNAS':15}{RESET}"
-    )
-    print("-" * 90)
+    # Función para formatear una fila
+    def fmt(fila):
+        return " | ".join(celda.ljust(anchos[idx]) for idx, celda in enumerate(fila))
 
-    for i, m in enumerate(mascotas, 1):
-        vacunas = ", ".join(m["vacunas"]) if m["vacunas"] else "Ninguna"
-        nombre = cortar(m["nombre"], 15)
-        especie = cortar(m["especie"], 15)
-        dueno = cortar(m["dueno"], 15)
-        vacc = cortar(vacunas, 15)
+    # Encabezado
+    print(fmt(cols))
+    print("-" * (sum(anchos) + 3 * (len(cols) - 1)))
 
-        print(
-            f"{i:<3} {nombre:15}{especie:15}{str(m['edad']):5}"
-            f"{m['sexo']:10}{dueno:15}{vacc:15}"
-        )
+    # Cuerpo
+    for fila in filas:
+        print(fmt(fila))
 
-    print("=" * 90 + "\n")
-    input("Presiona ENTER para volver al menú...")
-
-# =====================
-# 🎯 MENÚ PRINCIPAL (INQUIRERPY)
-# =====================
-def menu_interactivo():
-    opcion = inquirer.select(
-        message="GESTOR DE MASCOTAS 🐾",
-        choices=[
-            "🐶 Registrar nueva mascota",
-            "📋 Listar mascotas",
-            "❌ Salir"
-        ],
-    ).execute()
-
-    return opcion
-
-# =====================
-# ▶️ PROGRAMA PRINCIPAL
-# =====================
-def main():
-    mascotas = cargar_datos()
-
-    while True:
-        limpiar_pantalla()
-        seleccion = menu_interactivo()
-
-        if seleccion == "🐶 Registrar nueva mascota":
-            registrar_mascota(mascotas)
-
-        elif seleccion == "📋 Listar mascotas":
-            listar_mascotas(mascotas)
-
-        elif seleccion == "❌ Salir":
-            print("\nSaliendo del programa...")
-            break
-
-# =====================
-# 🔌 ARRANQUE DEL PROGRAMA
-# =====================
-if __name__ == "__main__":
-    main()
-
-    
+    pausar()
