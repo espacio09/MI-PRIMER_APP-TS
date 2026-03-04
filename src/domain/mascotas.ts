@@ -1,7 +1,26 @@
 // tipos (interfaces), validaciones básicas
+// src/domain/mascota.ts
 
 
-// src/mascotas.ts
+export interface Mascota {
+  id: string; 
+  nombre: string;
+  especie: string;
+  raza: string;
+  edad: number;
+  proprietario: string;
+  fecha_registro: string; 
+}
+
+
+
+
+
+
+
+
+
+/*/ src/mascotas.ts
 import * as readline from "node:readline";
 import { cargarDatos, guardarDatos } from "../storage.js";
 import { Mascota } from "../modelos/RegistroMascotas.js";
