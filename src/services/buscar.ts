@@ -1,0 +1,1 @@
+// lógica de "buscar" (por término o criterios)

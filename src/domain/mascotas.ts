@@ -1,10 +1,10 @@
-// ← lógica: registrar y listar mascotas
+// tipos (interfaces), validaciones básicas
 
 
 // src/mascotas.ts
 import * as readline from "node:readline";
-import { cargarDatos, guardarDatos } from "./storage.js";
-import { Mascota } from "./modelos/RegistroMascotas.js";
+import { cargarDatos, guardarDatos } from "../storage.js";
+import { Mascota } from "../modelos/RegistroMascotas.js";
 
 function question(query: string): Promise<string> {
   const rl = readline.createInterface({ 

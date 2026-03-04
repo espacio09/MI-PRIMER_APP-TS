@@ -1,9 +1,9 @@
 // ← punto de entrada (main loop) -6) src/index.ts – bucle principal
-
+// entrada del cli, interacción con el usuario, menú, etc.
 
 // src/index.ts
-import { menuInteractivo, OPC_LISTAR, OPC_REGISTRAR, OPC_SALIR } from "./menu.js";
-import { cargarONuevo, listarMascotas, registrarMascota } from "./mascotas.js";
+import { menuInteractivo, OPC_LISTAR, OPC_REGISTRAR, OPC_SALIR } from "../menu.js";
+import { cargarONuevo, listarMascotas, registrarMascota } from "../domain/mascotas.js";
 
 async function main(): Promise<void> {
   const mascotas = cargarONuevo();
