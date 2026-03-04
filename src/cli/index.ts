@@ -1,7 +1,6 @@
 // ← punto de entrada (main loop) -6) src/index.ts – bucle principal
 // entrada del cli, interacción con el usuario, menú, etc.
 
-// src/index.ts
 
 // src/cli/index.ts
 import { handleBuscar } from "./handlers/handleBuscar.js";

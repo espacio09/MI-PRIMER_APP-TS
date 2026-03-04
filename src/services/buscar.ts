@@ -1,6 +1,9 @@
 // lógica de "buscar" (por término o criterios)
 // src/services/buscar.ts
 
+import type { Mascota } from "../domain/mascotas.js";
+import { repo } from "../data/repo.js";
+
 /*
 
 import type { Mascota } from "../domain/mascotas.js";
@@ -31,18 +34,18 @@ export interface CriteriosBusqueda {
   id?: string;
   nombre?: string;
   raza?: string;
-  propietario?: string;
+  proprietario?: string;
   rangoEdad?: { min?: number; max?: number };
 }
 
 export async function buscarPorCriterios(c: CriteriosBusqueda): Promise<Mascota[]> {
-  const mascotas = await repo.getAll();
-  
-  return mascotas.filter((m) => {
+  const mascotas = (await repo.getAll()) as Mascota[];
+
+  return mascotas.filter((m: Mascota) => {
     if (c.id && m.id !== c.id) return false;
     if (c.nombre && !m.nombre?.toLowerCase().includes(c.nombre.toLowerCase())) return false;
     if (c.raza && !m.raza?.toLowerCase().includes(c.raza.toLowerCase())) return false;
-    if (c.propietario && !m.propietario?.toLowerCase().includes(c.propietario.toLowerCase())) return false;
+    if (c.proprietario && !m.proprietario?.toLowerCase().includes(c.proprietario.toLowerCase())) return false;
     if (c.rangoEdad) {
       const e = m.edad ?? Number.POSITIVE_INFINITY;
       if (c.rangoEdad.min != null && e < c.rangoEdad.min) return false;

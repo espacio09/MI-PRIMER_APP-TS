@@ -1,7 +1,9 @@
 
 // src/cli/handlers/handleBuscar.ts
 import chalk from "chalk";
-import { buscarMascotas } from "../../services/buscar";
+import { buscarPorCriterios } from "../../services/buscar.js";
+
+
 
 export async function handleBuscar(rawTerm?: string) {
   const term = (rawTerm ?? "").trim();
@@ -20,7 +22,7 @@ export async function handleBuscar(rawTerm?: string) {
   }
 
   // 2) Ejecutar búsqueda
-  const resultados = await buscarMascotas(term);
+  const resultados = await buscarPorCriterios({ nombre: term });
 
   // 3) Si no hay resultados → mensaje en amarillo
   if (!resultados || resultados.length === 0) {
@@ -34,11 +36,12 @@ export async function handleBuscar(rawTerm?: string) {
   // 4) Mostrar resultados
   console.log(chalk.green(`✔ ${resultados.length} resultado(s) para “${term}”:`));
   for (const m of resultados) {
+
     // Ajusta los campos según tu modelo
     console.log(
       `• ${chalk.bold(m.nombre)} ` +
       chalk.gray(`(id: ${m.id}${m.raza ? `, raza: ${m.raza}` : ""})`) +
-      (m.propietario ? ` — propietario: ${m.propietario}` : "")
+      (m.proprietario ? ` — propietario: ${m.proprietario}` : "")
     );
   }
 }

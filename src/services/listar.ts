@@ -7,5 +7,5 @@ import repo from "../data/repo.js";
 
 export async function listarMascotas(): 
 Promise<Mascota[]> {
-  return await repo.getAll();
+  return (await repo.getAll()) as Mascota[];
 }   

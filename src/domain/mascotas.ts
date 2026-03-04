@@ -14,12 +14,6 @@ export interface Mascota {
 
 
 
-
-
-
-
-
-
 /*/ src/mascotas.ts
 import * as readline from "node:readline";
 import { cargarDatos, guardarDatos } from "../storage.js";
@@ -102,3 +96,5 @@ export async function listarMascotas(mascotas: Mascota[]): Promise<void> {
 export function cargarONuevo(): Mascota[] {
   return cargarDatos();
 }
+  // fin src/mascotas.ts
+*/
