@@ -1,8 +1,10 @@
 // acceso a datos (leer/escribir JSON/DB)
-import fs from "fs/promises";
-import { fileURLToPath } from "url";
 
-const dataFile = fileURLToPath(new URL("../../datos/mascotas.json", import.meta.url));
+
+import fs from "fs/promises";
+import path from "path";
+const dataFile = path.join(__dirname, "../../datos/mascotas.json");
+
 
 export const repo = {
 	async getAll(): Promise<unknown[]> {
