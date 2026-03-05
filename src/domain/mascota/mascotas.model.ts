@@ -1,17 +1,20 @@
-// tipos (interfaces), validaciones básicas
-// src/domain/mascota.ts
+//<-- Mascota class
 
 
-export interface Mascota {
-  id: string; 
-  nombre: string;
-  especie: string;
-  raza: string;
-  edad: number;
-  proprietario: string;
-  fecha_registro: string; 
+export class Mascota {
+  constructor(
+    public id: string,
+    public nombre: string,
+    public especie: string,
+    public raza: string,
+    public edad: number,
+    public proprietario: string,
+    public fecha_registro: string
+  ) {}
 }
 
+
+ 
 
 
 /*/ src/mascotas.ts
