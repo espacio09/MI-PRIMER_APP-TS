@@ -2,45 +2,22 @@
 
 
 // src/storage.ts
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { Mascota } from "./modelos/RegistroMascotas.js";
 
-// Compatibilidad ESM para obtener __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import fs from "fs";
+import path from "path";
 
-const DATA_DIR = join(__dirname, "..", "datos");
-const DATA_FILE = join(DATA_DIR, "mascotas.json");
+const basePath = path.join(__dirname, "../datos");
 
-function asegurarDirectorio(): void {
-  if (!existsSync(DATA_DIR)) {
-    mkdirSync(DATA_DIR, { recursive: true });
-  }
+export function leerArchivo(nombre: string) {
+  const ruta = path.join(basePath, nombre);
+
+  if (!fs.existsSync(ruta)) return null;
+
+  const data = fs.readFileSync(ruta, "utf-8");
+  return JSON.parse(data);
 }
 
-export function cargarDatos(): Mascota[] {
-  asegurarDirectorio();
-
-  if (!existsSync(DATA_FILE)) {
-    return [];
-  }
-
-  try {
-    const raw = readFileSync(DATA_FILE, "utf8");
-    if (!raw.trim()) return [];
-
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-export function guardarDatos(mascotas: Mascota[]): void {
-  asegurarDirectorio();
-
-  const json = JSON.stringify(mascotas, null, 2);
-  writeFileSync(DATA_FILE, json, "utf8");
+export function guardarArchivo(nombre: string, contenido: any) {
+  const ruta = path.join(basePath, nombre);
+  fs.writeFileSync(ruta, JSON.stringify(contenido, null, 2), "utf-8");
 }
