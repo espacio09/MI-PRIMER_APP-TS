@@ -9,7 +9,7 @@ export class Mascota {
     public raza: string,
     public edad: number,
     public proprietario: string,
-    public vacunas: string[],
+    //public vacunas: string[],
     public fecha_registro: string
   ) {}
 }

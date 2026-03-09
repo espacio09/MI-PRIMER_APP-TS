@@ -13,7 +13,7 @@ export class MascotaService {
     especie: string,
     raza: string,
     edad: number,
-    vacunas: string,
+    //vacunas: string,
     proprietario: string
   ): Mascota {
 
@@ -48,7 +48,7 @@ if (!nombre || nombre.trim() === "") {
       raza,
       edad,
       proprietario,
-      vacunas: vacunas.split(",").map(v => v.trim()),
+      //vacunas: vacunas.split(",").map(v => v.trim()),
       fecha_registro: new Date().toISOString()
     };
 
