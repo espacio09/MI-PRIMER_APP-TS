@@ -34,18 +34,27 @@ function crearMascotaCLI() {
       rl.question("Raza: ", raza => {
         rl.question("Edad: ", edadInput => {
           rl.question("Propietario: ", proprietario => {
-            
-            const edad = Number(edadInput);
-            const mascota = mascotaService.crearMascota(
-              nombre,
-              especie,
-              raza,
-              edad,
-              proprietario
-            );
+            rl.question("Vacunas (separadas por comas): ", vacunas => {
+              try {
+                const edad = Number(edadInput);
+                const mascota = mascotaService.crearMascota(
+                  nombre,
+                  especie,
+                  raza,
+                  edad,
+                  proprietario,
+                  vacunas
+                );
 
-            console.log("\n🐶 Mascota creada con éxito:\n", mascota);
-            mostrarMenu();
+                console.log("\n🐶 Mascota creada con éxito:\n", mascota);
+                
+                mostrarMenu();
+
+              } catch (error: any) {
+                console.log("❌ Error al crear mascota:", error.message);
+                mostrarMenu();
+              }
+            });
           });
         });
       });
@@ -61,3 +70,4 @@ function listarMascotasCLI() {
 
 mostrarMenu();
 
+}
