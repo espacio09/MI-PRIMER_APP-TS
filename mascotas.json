@@ -1,0 +1,29 @@
+[
+  {
+    "id": "87c17b78-ab30-4dc8-a31e-dce41087e391",
+    "nombre": "Marlon",
+    "especie": "perro",
+    "raza": "mixta",
+    "edad": 3,
+    "proprietario": "Sabine",
+    "fecha_registro": "2026-03-09T15:20:53.642Z"
+  },
+  {
+    "id": "294c8378-647c-40ee-b2a7-395f502cc08b",
+    "nombre": "Bodo",
+    "especie": "gato",
+    "raza": "siam",
+    "edad": 1,
+    "proprietario": "Gustavo",
+    "fecha_registro": "2026-03-09T15:21:42.571Z"
+  },
+  {
+    "id": "bada4238-6b9f-4e63-8802-fa53e17c2e56",
+    "nombre": "Nala",
+    "especie": "perra",
+    "raza": "zwergspitz",
+    "edad": 5,
+    "proprietario": "Olga",
+    "fecha_registro": "2026-03-09T15:22:36.467Z"
+  }
+]

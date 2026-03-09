@@ -2,6 +2,7 @@
 // entrada del cli, interacción con el usuario, menú, etc.
 
 
+
 // src/cli/index.ts
 
 import readline from "readline";
@@ -17,37 +18,33 @@ const rl = readline.createInterface({
 // ----------------------------
 
 function crearMascotaCLI() {
-  
- function preguntarNombre() {
-    rl.question("Nombre: ", nombre => {
 
+  function preguntarNombre() {
+    rl.question("Nombre: ", nombre => {
       if (!nombre.trim()) {
         console.log("❌ El nombre es obligatorio.\n");
-        return preguntarNombre();  // <- repetir la pregunta
+        return preguntarNombre();
       }
-
- preguntarEspecie(nombre);
+      preguntarEspecie(nombre);
     });
   }
 
-
   function preguntarEspecie(nombre: string) {
     rl.question("Especie: ", especie => {
-
       if (!especie.trim()) {
         console.log("❌ La especie es obligatoria.\n");
-        return preguntarEspecie(nombre); // repetir
+        return preguntarEspecie(nombre);
       }
+      preguntarRaza(nombre, especie);
+    });
+  }
 
-     
- function preguntarRaza(nombre: string, especie: string) {
+  function preguntarRaza(nombre: string, especie: string) {
     rl.question("Raza: ", raza => {
-
       if (!raza.trim()) {
         console.log("❌ La raza es obligatoria.\n");
-        return preguntarRaza(nombre, especie); // repetir
+        return preguntarRaza(nombre, especie);
       }
-
       preguntarEdad(nombre, especie, raza);
     });
   }
@@ -58,7 +55,7 @@ function crearMascotaCLI() {
 
       if (Number.isNaN(edad) || edad < 0) {
         console.log("❌ La edad debe ser mayor o igual a 0.\n");
-        return preguntarEdad(nombre, especie, raza);  // repetir
+        return preguntarEdad(nombre, especie, raza);
       }
 
       preguntarPropietario(nombre, especie, raza, edad);
@@ -72,10 +69,9 @@ function crearMascotaCLI() {
     edad: number
   ) {
     rl.question("Propietario: ", proprietario => {
-
       if (!proprietario.trim()) {
         console.log("❌ El propietario es obligatorio.\n");
-        return preguntarPropietario(nombre, especie, raza, edad);  // repetir
+        return preguntarPropietario(nombre, especie, raza, edad);
       }
 
       try {
@@ -89,31 +85,23 @@ function crearMascotaCLI() {
 
         console.log("\n🐶 Mascota creada con éxito:\n");
         console.log(mascota);
+
       } catch (error: any) {
-        console.log("❌ Error al crear mascota:", error.message);
+        console.log("\n❌ Error al crear mascota:", error.message);
       }
+
       mostrarMenu();
     });
   }
 
-  // arrancamos preguntando por nombre
+  // Start
   preguntarNombre();
 }
-      )  };
-    }
-    
-
-mostrarMenu();
-    rl.on("close", () => {
-      console.log("\n👋 ¡Hasta luego!");
-      process.exit(0);
-  });
-
-
 
 // ----------------------------
 //   LISTAR MASCOTAS
 // ----------------------------
+
 function listarMascotasCLI() {
   const todas = mascotaService.listarMascotas();
   console.log("\n📋 Lista de mascotas registradas:\n");
@@ -121,11 +109,10 @@ function listarMascotasCLI() {
   mostrarMenu();
 }
 
-  
-
 // ----------------------------
 //   MENU
 // ----------------------------
+
 function mostrarMenu() {
   console.log("\n🐾 MENU");
   console.log("1 - Crear mascota");
@@ -145,6 +132,7 @@ function mostrarMenu() {
 // ----------------------------
 //   CLI CLOSE EVENT
 // ----------------------------
+
 rl.on("close", () => {
   console.log("\n👋 ¡Hasta luego!");
   process.exit(0);
@@ -153,4 +141,5 @@ rl.on("close", () => {
 // ----------------------------
 //   ARRANCAR
 // ----------------------------
+
 mostrarMenu();
