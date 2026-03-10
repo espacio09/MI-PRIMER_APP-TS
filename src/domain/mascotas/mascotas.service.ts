@@ -2,7 +2,7 @@
 
 
 import { Mascota } from "./mascota.model";
-import { MascotaRepository } from "./mascota.repository";
+import { MascotaRepository } from "./mascotas.repository";
 import { randomUUID } from "crypto";
 
 export class MascotaService {
@@ -58,5 +58,36 @@ if (!nombre || nombre.trim() === "") {
     
   listarMascotas(): Mascota[] {
     return this.repository.findAll();
+  }
+}
+
+
+  buscarMascotaPorNombre(nombre: string): Mascota | null {
+  if (!nombre || nombre.trim() === "") {
+    throw new Error("El nombre es obligatorio para buscar.");
+  }
+
+  const result = this.repository.findByName(nombre);
+  return result ?? null;
+}
+
+
+
+////////////////////////////////////
+
+@Injectable()
+export class MascotasService {
+  constructor(
+    @InjectRepository(Mascota)
+    private readonly mascotaRepo: Repository<Mascota>,
+  ) {}
+
+  create(dto: CreateMascotaDto) {
+    const mascota = this.mascotaRepo.create(dto);
+    return this.mascotaRepo.save(mascota);
+  }
+
+  update(id: number, dto: UpdateMascotaDto) {
+    return this.mascotaRepo.update(id, dto);
   }
 }

@@ -1,7 +1,7 @@
 // lógica de "buscar" (por término o criterios)
 // src/services/buscar.ts
 
-import type { Mascota } from "../domain/mascota/mascota.model.js";
+import type { Mascota } from "../domain/mascotas/mascota.model.js";
 import { repo } from "../data/repo.js";
 
 /*

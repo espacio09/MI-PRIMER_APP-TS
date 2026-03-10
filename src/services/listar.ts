@@ -1,7 +1,7 @@
 // src/services/listar.ts
 
 
-import type { Mascota } from "../domain/mascota/mascota.model.js";
+import type { Mascota } from "../domain/mascotas/mascota.model.js";
 import repo from "../data/repo.js";
 
 

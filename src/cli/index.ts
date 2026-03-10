@@ -6,7 +6,7 @@
 // src/cli/index.ts
 
 import readline from "readline";
-import { mascotaService } from "../domain/mascota";
+import { mascotaService } from "../domain/mascotas";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -109,6 +109,36 @@ function listarMascotasCLI() {
   mostrarMenu();
 }
 
+
+
+//----------------------------
+//   BUSCAR MASCOTA POR NOMBRE
+// ----------------------------
+
+function buscarMascotaPorNombreCLI(): void {
+  rl.question("Nombre a buscar: ", nombre => {
+    if (!nombre.trim()) {
+      console.log("❌ El nombre es obligatorio.\n");
+      return buscarMascotaPorNombreCLI();
+    }
+
+    try {
+      const mascota = mascotaService.buscarMascotaPorNombre(nombre);
+
+      if (!mascota) {
+        console.log(`\n🔍 No se encontró ninguna mascota con el nombre "${nombre}".`);
+      } else {
+        console.log("\n🔍 Mascota encontrada:\n");
+        console.log(mascota);
+      }
+    } catch (error: any) {
+      console.log("\n❌ Error al buscar mascota:", error.message);
+    }
+
+    mostrarMenu();
+  });
+}
+
 // ----------------------------
 //   MENU
 // ----------------------------
@@ -117,11 +147,13 @@ function mostrarMenu() {
   console.log("\n🐾 MENU");
   console.log("1 - Crear mascota");
   console.log("2 - Listar mascotas");
+  console.log("3 - Buscar mascota por nombre");
   console.log("0 - Salir");
 
   rl.question("\nElige una opción: ", opcion => {
     if (opcion === "1") return crearMascotaCLI();
     if (opcion === "2") return listarMascotasCLI();
+    if (opcion === "3") return buscarMascotaPorNombreCLI();
     if (opcion === "0") return rl.close();
 
     console.log("❌ Opción no válida.");
@@ -143,3 +175,5 @@ rl.on("close", () => {
 // ----------------------------
 
 mostrarMenu();
+
+/
