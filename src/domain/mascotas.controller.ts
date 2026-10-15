@@ -9,5 +9,5 @@ update(
   @Param('id') id: string,
   @Body() updateMascotaDto: UpdateMascotaDto,
 ) {
-  return this.mascotasService.update(+id, updateMascotaDto);
+  return this.mascotaservice.update(+id, updateMascotaDto);
 }

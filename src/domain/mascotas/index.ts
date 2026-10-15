@@ -6,3 +6,12 @@ import { MascotaService } from "./mascotas.service";
 
 const repository = new FileMascotaRepository();
 export const mascotaService = new MascotaService(repository);
+
+
+.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }),
+);
